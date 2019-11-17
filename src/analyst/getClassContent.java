@@ -5,6 +5,7 @@ import java.util.*;
 
 public class getClassContent {
     protected File[] listOfFiles;
+    int a=0;
 
     public getClassContent (String path) throws IOException {
         ListFileFromFolder("");
