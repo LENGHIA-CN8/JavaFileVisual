@@ -1,18 +1,26 @@
 package analyst;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class ObjectClasses {
       public String name;
-      public Parser.types type;
-      public Parser.accessModifiers access_modifier;
+      public String type;
+      public String access_modifier;
       boolean hasParents;
-      public List<ObjectClasses> children;
-      public List<?> ListFields;
-      public List<?> ListMethods;
+      public List<String> children;
+      public List<String> ListFields;
+      public List<String> ListMethods;
+      public List<String> ListConstructors;
       public ObjectClasses(){
             name="";
+            type="";
+            access_modifier="";
             hasParents=false;
+            children=new ArrayList<>();
+            ListFields=new ArrayList<>();
+            ListMethods=new ArrayList<>();
+            ListConstructors=new ArrayList<>();
 
       }
       public void show(){
