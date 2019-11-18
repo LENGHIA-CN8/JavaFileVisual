@@ -16,7 +16,10 @@ public class ObjectMethods {
     public void show_modifier(){
 
     }
-    ObjectMethods(){
+    public ObjectMethods(){
+        name="";
+        type="";
+        access_modifier="";
 
     }
 }

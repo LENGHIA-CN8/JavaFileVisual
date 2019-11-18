@@ -16,5 +16,10 @@ public class ObjectFields {
     public void show_modifier(){
 
     }
+    public ObjectFields(){
+        name="";
+        type="";
+        access_modifier="";
+    }
 
 }

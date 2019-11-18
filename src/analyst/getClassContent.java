@@ -5,12 +5,13 @@ import java.util.*;
 
 public class getClassContent {
     protected File[] listOfFiles;
-    int a=0;
 
     public getClassContent (String path) throws IOException {
+        listOfFiles=new File[100];
         ListFileFromFolder("");
     }
-    public void ListFileFromFolder (String path) throws IOException {
+
+    public File[] ListFileFromFolder (String path) throws IOException {
         File folder = new File("/Users/user/Desktop/JavaFileVisual");
         FilenameFilter filter = (dir, name) -> {
             if (name.endsWith(".java")) {
@@ -22,9 +23,10 @@ public class getClassContent {
 
         listOfFiles=folder.listFiles(filter);
         //System.out.println(listOfFiles[0].getName());
-        for(int i=0;i<listOfFiles.length;i++){
-            readContentFromFile(listOfFiles[i]);
-        }
+//        for(int i=0;i<listOfFiles.length;i++){
+//            readContentFromFile(listOfFiles[i]);
+//        }
+        return listOfFiles;
     }
     public List<String> readContentFromFile(File file) throws IOException {
         List<String> content=new ArrayList<>();
@@ -35,7 +37,12 @@ public class getClassContent {
             StringTokenizer st = new StringTokenizer( str , " ");
             while (st.hasMoreTokens()) {
                 String s = st.nextToken();
-                if (s.contains("(") && !s.equals("(")) {
+                if(s.contains("=")&&!s.equals("=")){
+                    int idx1=s.indexOf("=");
+                    content.add(s.substring(0,idx1));
+                    content.add("=");
+                    content.add(s.substring(idx1+1,s.length()));
+                } else if (s.contains("(") && !s.equals("(")) {
                     int idx1 = s.indexOf("(");
                     content.add(s.substring(0, idx1));
                     content.add("(");
