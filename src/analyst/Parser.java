@@ -34,7 +34,7 @@ public class Parser extends getClassContent {
             for(int i=0;i<content.size();i++){
                 if(content.get(i).equals("class")){
                      handle_class(i,content);
-//                     System.out.println(ob.to_String());
+                     System.out.println(ob.to_String());
                 }
             }
 
@@ -67,17 +67,11 @@ public class Parser extends getClassContent {
         while(!content.get(i).equals("{")){
             if(content.get(i).equals("implements")||content.get(i).equals("extends")){
                 ob.hasParents=true;
-                break;
+                //break;
             }
+            i++;
         }
-        System.out.println(ob.to_String());
-        //return ob;
-
-
-
-
-
-
+        //if(content.get(i).equals("{"))
     }
 
 }
