@@ -7,15 +7,15 @@ import java.util.List;
 import java.util.Stack;
 
 public class Parser extends getClassContent {
-    List<String> ObjectCurrent=new ArrayList<>();
+    Stack<String> ObjectCurrent=new Stack<>();
     Stack<String> AccessModCurrent=new Stack<>();
     Stack<String> typeCurrent=new Stack<>();
     Stack<String> othersCurrent=new Stack<>();
-    public boolean  InsideClass;
     Stack<String> ObjectCurrentName=new Stack<>();
     ObjectClasses ob;
     ObjectConstructors obcon;
     ObjectFields obfield;
+    public boolean  InsideClass;
 
     List<ObjectClasses> listofObjectClasses=new ArrayList<>();
     List<String> content=new ArrayList<>();
@@ -41,7 +41,7 @@ public class Parser extends getClassContent {
                     i+=2;                  //pass through "{" of outer class
                     //System.out.println(i);
                     System.out.println(ob.to_String());
-                } else if ( ObjectCurrentName.size()>0){                 //check in a class
+                } else if ( ObjectCurrentName.size()>0){                 //check inside a class
                     if(content.get(i).equals(ObjectCurrentName.get(0)))
                         handle_constructor(i);
                     else if(content.get(i).equals("{")) {
@@ -59,6 +59,8 @@ public class Parser extends getClassContent {
                     if(content.get(i).equals(";")){
                         handle_fields(i);
 //                        System.out.println("yes");
+                    } else if(content.get(i).equals("(") && !content.get(i-1).equals(ObjectCurrentName.get(0))){
+                        System.out.println("yes");
                     }
                 }
             }
@@ -156,7 +158,7 @@ public class Parser extends getClassContent {
         System.out.println(obfield.to_String());
    }
    public void handle_method(int i){
-        
+
    }
 
 }

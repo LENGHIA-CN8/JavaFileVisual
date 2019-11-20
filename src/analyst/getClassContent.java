@@ -49,8 +49,10 @@ public class getClassContent {
                     content.add(s.substring(idx1+1,s.length()));
                 } else if (s.contains("(") && !s.equals("(")) {
                     int idx1 = s.indexOf("(");
-                    content.add(s.substring(0, idx1));
-                    content.add("(");
+                    if(idx1>0) {
+                        content.add(s.substring(0, idx1));
+                        content.add("(");
+                    } else content.add("(");
                     if (s.contains(")")) {
                         int idx2 = s.indexOf(")");
                         content.add(s.substring(idx1 + 1, idx2));
