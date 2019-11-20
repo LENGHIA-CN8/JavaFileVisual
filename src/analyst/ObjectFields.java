@@ -16,10 +16,13 @@ public class ObjectFields {
     public void show_modifier(){
 
     }
-    public ObjectFields(){
-        name="";
-        type="";
-        access_modifier="";
+    public ObjectFields(String _name,String _type,String _access_modifier){
+        name=_name;
+        type=_type;
+        access_modifier=_access_modifier;
+    }
+    public String to_String(){
+        return access_modifier+" "+type+" "+name;
     }
 
 }

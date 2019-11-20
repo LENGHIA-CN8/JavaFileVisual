@@ -16,7 +16,7 @@ public class Main {
         parser.handle();
     }
     public static void main(String[] args){
-        new Main();
+        Main m=new Main();
     }
 
 }
