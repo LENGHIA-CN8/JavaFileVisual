@@ -1,6 +1,6 @@
 
 public interface Nghia {
-    public List<String> a=1;
+    protected List<String> a=1;
     public int test=1;
     public String a;
     public Nghia (int a,int b){

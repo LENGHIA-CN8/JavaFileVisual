@@ -15,6 +15,7 @@ public class Parser extends getClassContent {
     ObjectClasses ob;
     ObjectConstructors obcon;
     ObjectFields obfield;
+    ObjectMethods obmethod;
     public boolean  InsideClass;
 
     List<ObjectClasses> listofObjectClasses=new ArrayList<>();
@@ -43,7 +44,7 @@ public class Parser extends getClassContent {
                     System.out.println(ob.to_String());
                 } else if ( ObjectCurrentName.size()>0){                 //check inside a class
                     if(content.get(i).equals(ObjectCurrentName.get(0)))
-                        handle_constructor(i);
+                        handle_constructor(i);       //handle constructor
                     else if(content.get(i).equals("{")) {
                         i++;      //pass through "{" of constructor or method
                         cnt.add(1);
@@ -54,13 +55,14 @@ public class Parser extends getClassContent {
                                 cnt.add(cnt.pop()-1);
                             } else i++;
                         }
-                        System.out.println(cnt.peek());
+                        //System.out.println(cnt.peek());
                     }
                     if(content.get(i).equals(";")){
-                        handle_fields(i);
+                        handle_fields(i);         //handle fields
 //                        System.out.println("yes");
                     } else if(content.get(i).equals("(") && !content.get(i-1).equals(ObjectCurrentName.get(0))){
-                        System.out.println("yes");
+                        handle_method(i);
+                        //System.out.println("yes");      //handle method
                     }
                 }
             }
@@ -98,8 +100,6 @@ public class Parser extends getClassContent {
             }
             i++;
         }
-
-        //if(content.get(i).equals("{"))
     }
     public void handle_constructor(int i){
         ObjectCurrent.add("constructor");
@@ -109,10 +109,8 @@ public class Parser extends getClassContent {
         othersCurrent.add("");
         obcon=new ObjectConstructors(ObjectCurrentName.peek(),AccessModCurrent.peek());
         while(!content.get(i).equals(")")){
-            String s1=types.get_type(content.get(i));
-            if(!s1.equals("")) {
-                obcon.param.add(s1);
-            }
+            if(content.get(i).equals("(")||content.get(i).equals(","))
+                obcon.param.add(content.get(i+1));
             i++;
         }
         System.out.println(obcon.to_String());
@@ -158,6 +156,33 @@ public class Parser extends getClassContent {
         System.out.println(obfield.to_String());
    }
    public void handle_method(int i){
+        ObjectCurrent.add("method");
+        ObjectCurrentName.add(content.get(i-1));
+        typeCurrent.add(content.get(i-2));
+       for(int j=i;j>=0;j--){
+           String s=access_mod.getModifier(content.get(j));
+           if(s!=""){
+               AccessModCurrent.add(s);
+           }
+           s=othrs.get_Other(content.get(j));
+           if(s!="") {
+               othersCurrent.add(content.get(j));
+           }
+           if(othersCurrent.size()==AccessModCurrent.size() && othersCurrent.size()>0 && AccessModCurrent.size()>0) break;
+       }
+
+       if(AccessModCurrent.size()>othersCurrent.size()) othersCurrent.add("");
+       else if(othersCurrent.size()>AccessModCurrent.size()) AccessModCurrent.add("");
+       obmethod= new ObjectMethods(ObjectCurrentName.pop(),typeCurrent.pop(),AccessModCurrent.pop());
+       while(!content.get(i).equals(")")){
+           if(content.get(i).equals("(")||content.get(i).equals(","))
+               obmethod.param.add(content.get(i+1));
+           i++;
+       }
+       System.out.println(obmethod.to_String());
+
+
+
 
    }
 
