@@ -12,7 +12,8 @@ public class getClassContent {
     }
 
     public File[] ListFileFromFolder (String path) throws IOException {
-        File folder = new File("/Users/user/Desktop/JavaFileVisual");
+        File folder = new File("/Users/user/Desktop/Dahinh2/src");
+        //File folder = new File("/Users/user/Desktop/JavaFileVisual");
         FilenameFilter filter = (dir, name) -> {
             if (name.endsWith(".java")) {
                 return true;

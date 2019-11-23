@@ -21,10 +21,11 @@ public class ObjectMethods {
     public void show_modifier(){
 
     }
-    public ObjectMethods(String _name,String _type,String _access_modifier){
+    public ObjectMethods(String _name,String _type,String _access_modifier,String _othr){
         name=_name;
         type=_type;
         access_modifier=_access_modifier;
+        othr=_othr;
         param=new ArrayList<>();
     }
     public String to_String(){
@@ -36,6 +37,6 @@ public class ObjectMethods {
             }
             s1 += ")";
         } else s1 = "()";
-        return access_modifier+" "+type+" "+name+" "+s1;
+        return access_modifier+" "+othr+" "+type+" "+name+" "+s1;
     }
 }

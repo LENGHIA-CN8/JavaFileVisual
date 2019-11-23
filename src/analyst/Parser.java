@@ -2,9 +2,7 @@ package analyst;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Stack;
+import java.util.*;
 
 public class Parser extends getClassContent {
     Stack<String> ObjectCurrent=new Stack<>();
@@ -20,7 +18,8 @@ public class Parser extends getClassContent {
 
     List<ObjectClasses> listofObjectClasses=new ArrayList<>();
     List<String> content=new ArrayList<>();
-    Stack<Integer> cnt= new Stack<>();
+    //Stack<Integer> cnt= new Stack<>();
+    int cnt=0;
 
     public Parser(String path) throws IOException {
          super(path);
@@ -33,43 +32,58 @@ public class Parser extends getClassContent {
             } catch(IOException e) {
                 e.getMessage();
             }
+            System.out.println(content);
             for(int i=0;i<content.size();i++){
                 if(content.get(i).equals("class")||content.get(i).equals("interface")) {
 
                     handle_class(i);
                     while(!content.get(i).equals("{")) ++i;
-                    //cnt.add(1);
                     i+=2;                  //pass through "{" of outer class
-                    //System.out.println(i);
                     System.out.println(ob.to_String());
                 } else if ( ObjectCurrentName.size()>0){                 //check inside a class
                     if(content.get(i).equals(ObjectCurrentName.get(0)))
                         handle_constructor(i);       //handle constructor
                     else if(content.get(i).equals("{")) {
-                        i++;      //pass through "{" of constructor or method
-                        cnt.add(1);
-                        while (cnt.peek()!=0) {                      //discard content in method or constructor
+                        ++i;      //pass through "{" of constructor or method
+                        cnt+=1;
+                        while (cnt!=0) {                      //discard content in method or constructor
                             if (content.get(i).equals("{")) {
-                                cnt.add(cnt.pop()+1);
+                                cnt+=1;
+                                i++;
                             } else if(content.get(i).equals("}")){
-                                cnt.add(cnt.pop()-1);
+                                cnt-=1;
+                                i++;
                             } else i++;
                         }
-                        //System.out.println(cnt.peek());
                     }
-                    if(content.get(i).equals(";")){
+                    else if(content.get(i).equals("(") && !content.get(i-1).equals(ObjectCurrentName.get(0))){
+
+                        handle_method(i);        //handle method
+                        if(obmethod.othr.equals("abstract")) {
+                            while(!content.get(i).equals(";")){
+                                i++;
+                            }
+                            i++;
+                        }
+                    } else if(content.get(i).equals(";")) {
                         handle_fields(i);         //handle fields
-//                        System.out.println("yes");
-                    } else if(content.get(i).equals("(") && !content.get(i-1).equals(ObjectCurrentName.get(0))){
-                        handle_method(i);
-                        //System.out.println("yes");      //handle method
                     }
                 }
             }
+            listofObjectClasses.add(ob);
+            renew();
+            }
+        System.out.println(Arrays.deepToString(listOfFiles));
 
-            System.out.println(content);
-        }
-
+    }
+    public void renew(){
+        ObjectCurrent.clear();
+        AccessModCurrent.clear();          //Update a new ObjectClass for each file
+        typeCurrent.clear();
+        othersCurrent.clear();
+        ObjectCurrentName.clear();
+        content.clear();
+        cnt=0;
     }
     public void handle_class(int i){
         ObjectCurrent.add("class");
@@ -117,7 +131,7 @@ public class Parser extends getClassContent {
         ob.ListConstructors.add(obcon);
 
     }
-    public void handle_fields(int i){
+    public void handle_fields(int i) {
         i--;            //pass through ";"
         ObjectCurrent.add("field");
         List<String> substr=new ArrayList<>();
@@ -155,11 +169,11 @@ public class Parser extends getClassContent {
         ob.ListFields.add(obfield);
         System.out.println(obfield.to_String());
    }
-   public void handle_method(int i){
+   public void handle_method(int i) {
         ObjectCurrent.add("method");
         ObjectCurrentName.add(content.get(i-1));
         typeCurrent.add(content.get(i-2));
-       for(int j=i;j>=0;j--){
+       for(int j=i-3;j>=i-6;j--){
            String s=access_mod.getModifier(content.get(j));
            if(s!=""){
                AccessModCurrent.add(s);
@@ -173,7 +187,7 @@ public class Parser extends getClassContent {
 
        if(AccessModCurrent.size()>othersCurrent.size()) othersCurrent.add("");
        else if(othersCurrent.size()>AccessModCurrent.size()) AccessModCurrent.add("");
-       obmethod= new ObjectMethods(ObjectCurrentName.pop(),typeCurrent.pop(),AccessModCurrent.pop());
+       obmethod= new ObjectMethods(ObjectCurrentName.pop(),typeCurrent.pop(),AccessModCurrent.pop(),othersCurrent.pop());
        while(!content.get(i).equals(")")){
            if(content.get(i).equals("(")||content.get(i).equals(","))
                obmethod.param.add(content.get(i+1));
