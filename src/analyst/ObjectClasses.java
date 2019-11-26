@@ -9,6 +9,7 @@ public class ObjectClasses {
       public String access_modifier;
       boolean hasParents;
       public List<String> children;
+      public List<String> parent;
       public List<ObjectFields> ListFields;
       public List<ObjectMethods> ListMethods;
       public List<ObjectConstructors> ListConstructors;
@@ -24,7 +25,8 @@ public class ObjectClasses {
 
       }
       public String to_String(){
-            return access_modifier+" "+othr+" "+name;
+            String symbol=othrs.get_symbol_Other(othr);
+            return access_modifier+" "+name+" "+symbol;
       }
       public void show(){
 

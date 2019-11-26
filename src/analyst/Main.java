@@ -11,7 +11,6 @@ public class Main {
         }
     }
     private void initGetClassInfo() throws IOException {
-//        new getClassContent("");
         Parser parser=new Parser("");
         parser.handle();
     }

@@ -22,7 +22,8 @@ public class ObjectFields {
         access_modifier=_access_modifier;
     }
     public String to_String(){
-        return access_modifier+" "+type+" "+name;
+        String symbol=access_mod.getSymbol(access_modifier);
+        return symbol+" "+name+":"+type;
     }
 
 }

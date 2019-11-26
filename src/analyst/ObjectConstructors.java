@@ -13,6 +13,7 @@ public class ObjectConstructors {
         param=new ArrayList<String>();
     }
     public String to_String() {
+        String symbol=access_mod.getSymbol(access_modifier);
         String s1;
         if (param.size() > 0) {
             s1 = "(" + param.get(0);
@@ -21,7 +22,7 @@ public class ObjectConstructors {
             }
             s1 += ")";
         } else s1 = "()";
-        return access_modifier+" "+ name+" "+ s1;
+        return symbol+" "+ name+" "+ s1;
     }
 
     }

@@ -23,10 +23,6 @@ public class getClassContent {
         };
 
         listOfFiles=folder.listFiles(filter);
-        //System.out.println(listOfFiles[0].getName());
-//        for(int i=0;i<listOfFiles.length;i++){
-//            readContentFromFile(listOfFiles[i]);
-//        }
         return listOfFiles;
     }
     public List<String> readContentFromFile(File file) throws IOException {
@@ -45,10 +41,16 @@ public class getClassContent {
                     if(s.contains(";")){
                         int idx2=s.indexOf(";");
                         content.add(s.substring(idx1+1,idx2));
-                        content.add(s.substring(idx2,s.length()));
+                        //content.add(s.substring(idx2,s.length()));
+                        content.add(";");
                     } else
                     content.add(s.substring(idx1+1,s.length()));
-                } else if (s.contains("(") && !s.equals("(")) {
+                }else if (s.contains(";") && !s.equals(";")) {
+                    int idx1 = s.indexOf(";");
+                    content.add(s.substring(0, idx1));
+                    content.add(";");
+                    //content.add(s.substring(idx1 + 1, s.length()));
+                }else if (s.contains("(") && !s.equals("(")) {
                     int idx1 = s.indexOf("(");
                     if(idx1>0) {
                         content.add(s.substring(0, idx1));
@@ -56,25 +58,27 @@ public class getClassContent {
                     } else content.add("(");
                     if (s.contains(")")) {
                         int idx2 = s.indexOf(")");
-                        content.add(s.substring(idx1 + 1, idx2));
-                        content.add(")");
-                        content.add(s.substring(idx2 + 1, s.length()));
+                        while(idx1>idx2){
+                            idx2 = s.indexOf(")",idx1);
+                        }
+                            content.add(s.substring(idx1 + 1, idx2));
+                            content.add(")");
+                            content.add(s.substring(idx2 + 1, s.length()));
+
                     } else content.add(s.substring(idx1 + 1, s.length()));
                 } else if (s.contains(")") && !s.equals(")")) {
                     int idx1 = s.indexOf(")");
                     content.add(s.substring(0, idx1));
                     content.add(")");
                     content.add(s.substring(idx1 + 1, s.length()));
-                } else if (s.contains(";") && !s.equals(";")) {
-                    int idx1 = s.indexOf(";");
-                    content.add(s.substring(0, idx1));
-                    content.add(";");
-                    content.add(s.substring(idx1 + 1, s.length()));
                 } else if (s.contains(",") && !s.equals(",")) {
                     int idx1 = s.indexOf(",");
                     content.add(s.substring(0, idx1));
                     content.add(",");
-                    content.add(s.substring(idx1 + 1, s.length()));
+                    String s1=s.substring(idx1+1,s.length());
+                    if(!s1.equals("")) {
+                        content.add(s1);
+                    }
                 } else {
                     content.add(s);
                 }

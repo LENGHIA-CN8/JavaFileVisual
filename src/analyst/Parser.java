@@ -18,7 +18,6 @@ public class Parser extends getClassContent {
 
     List<ObjectClasses> listofObjectClasses=new ArrayList<>();
     List<String> content=new ArrayList<>();
-    //Stack<Integer> cnt= new Stack<>();
     int cnt=0;
 
     public Parser(String path) throws IOException {
@@ -41,8 +40,10 @@ public class Parser extends getClassContent {
                     i+=2;                  //pass through "{" of outer class
                     System.out.println(ob.to_String());
                 } else if ( ObjectCurrentName.size()>0){                 //check inside a class
-                    if(content.get(i).equals(ObjectCurrentName.get(0)))
-                        handle_constructor(i);       //handle constructor
+                    if(content.get(i).equals(ObjectCurrentName.get(0))&&!content.get(i-1).equals("(")&&!content.get(i-1).equals(",")) {
+                        handle_constructor(i);//handle constructor
+                        System.out.println("isconstructor");
+                    }
                     else if(content.get(i).equals("{")) {
                         ++i;      //pass through "{" of constructor or method
                         cnt+=1;
@@ -65,8 +66,10 @@ public class Parser extends getClassContent {
                             }
                             i++;
                         }
+                        System.out.println("ismethod");
                     } else if(content.get(i).equals(";")) {
                         handle_fields(i);         //handle fields
+                        System.out.println("isfield");
                     }
                 }
             }
@@ -110,8 +113,10 @@ public class Parser extends getClassContent {
         while(!content.get(i).equals("{")){
             if(content.get(i).equals("implements")||content.get(i).equals("extends")){
                 ob.hasParents=true;
+
                 //break;
             }
+//            if(content.get(i).equals("extends")) ob.parent.add(content.get(i+2));
             i++;
         }
     }
@@ -123,8 +128,12 @@ public class Parser extends getClassContent {
         othersCurrent.add("");
         obcon=new ObjectConstructors(ObjectCurrentName.peek(),AccessModCurrent.peek());
         while(!content.get(i).equals(")")){
-            if(content.get(i).equals("(")||content.get(i).equals(","))
-                obcon.param.add(content.get(i+1));
+            if(content.get(i).equals("(")||content.get(i).equals(",")) {
+                while(content.get(i+1).equals("")) //obcon.param.add(content.get(i+2));
+                    i++;
+                if(!content.get(i+1).equals(")"))
+                 obcon.param.add(content.get(i + 1));
+            }
             i++;
         }
         System.out.println(obcon.to_String());
@@ -193,6 +202,7 @@ public class Parser extends getClassContent {
                obmethod.param.add(content.get(i+1));
            i++;
        }
+       ob.ListMethods.add(obmethod);
        System.out.println(obmethod.to_String());
 
 

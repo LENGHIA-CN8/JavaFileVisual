@@ -1,46 +1,40 @@
-import javax.swing.*;
-import java.util.ArrayList;
-import java.util.List;
+import java.awt.*;
 
-public class Layer extends JPanel {
-    private List<Shape> shapes = new ArrayList<>();
+public abstract class Shape {
+    protected String color;
+    protected boolean filled;
 
-    public void addShape(Shape newShape) {
-        shapes.add(newShape);
+    public Shape() {
     }
 
-    public void removeCircles() {
-        if (shapes == null) return;
-        for ( int i = 0 ; i < shapes.size(); i++){
-            if ( shapes.get(i) instanceof Circle ){
-                shapes.remove(i);
-            }
-        }
+    public Shape(String color, boolean filled) {
+        setColor(color);
+        setFilled(filled);
     }
 
-    public void removeDuplicates() {
-        if (shapes == null) return;
-        for (int i = 0 ; i < shapes.size(); i++) {
-            if (shapes.get(i) instanceof Circle) {
-                for (int j = i + 1 ; j < shapes.size(); j++) {
-                    if (shapes.get(i).hashCode() == shapes.get(j).hashCode()) {
-                        shapes.remove(j);
-                    }
-                }
-            }
-            if (shapes.get(i) instanceof Rectangle) {
-                for (int j = i + 1 ; j < shapes.size(); j++) {
-                    if (shapes.get(i).hashCode() == shapes.get(j).hashCode()) {
-                        shapes.remove(j);
-                    }
-                }
-            }
-        }
+    public String getColor() {
+        return color;
     }
 
-    public String getInfo() {
-        String res = "Layer of crazy shapes: \n";
-        for (Shape shape : shapes) res += shape.toString() + "\n";
-        return res;
+    public void setColor(String color) {
+        this.color = color;
     }
+
+    public boolean isFilled() {
+        return filled;
+    }
+
+    public void setFilled(boolean filled) {
+        this.filled = filled;
+    }
+
+    public abstract double getArea();
+
+    public abstract double getPerimeter();
+
+    public String toString() {
+        return "Shape[color=" + getColor() + ",filled=" + isFilled() + "]";
+    }
+
+
 }
