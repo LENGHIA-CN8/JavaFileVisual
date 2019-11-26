@@ -18,6 +18,7 @@ public class ObjectClasses {
             access_modifier=_access_modifier;
             othr=_othr;
             hasParents=false;
+            parent=new ArrayList<>();
             children=new ArrayList<>();
             ListFields=new ArrayList<>();
             ListMethods=new ArrayList<>();

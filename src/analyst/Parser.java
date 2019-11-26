@@ -73,6 +73,7 @@ public class Parser extends getClassContent {
                     }
                 }
             }
+            System.out.println(ob.parent);
             listofObjectClasses.add(ob);
             renew();
             }
@@ -116,7 +117,7 @@ public class Parser extends getClassContent {
 
                 //break;
             }
-//            if(content.get(i).equals("extends")) ob.parent.add(content.get(i+2));
+           if(content.get(i).equals("extends")) ob.parent.add(content.get(i+1));
             i++;
         }
     }
