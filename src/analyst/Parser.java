@@ -73,6 +73,8 @@ public class Parser extends getClassContent {
                     }
                 }
             }
+            ob.SetStringForProperties();    //set List StringFields,method
+
             System.out.println(ob.parent);
             listofObjectClasses.add(ob);
             renew();
