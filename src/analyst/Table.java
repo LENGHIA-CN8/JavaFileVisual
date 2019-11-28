@@ -60,7 +60,7 @@ public class Table {
         g2.draw(methodRect);
         g2.draw(Rect_frame);
 
-        g.drawString(objectclass.name, (int) (position.getX() + (maxWidth - Size.getWidth(g, objectclass.name, font)) / 2), (int) position.getY() + 13);
+        g.drawString(objectclass.to_String(), (int) (position.getX() + (maxWidth - Size.getWidth(g, objectclass.name, font)) / 2), (int) position.getY() + 13);
 
         g.setFont(font.deriveFont(Font.PLAIN));  //set font for properties
 

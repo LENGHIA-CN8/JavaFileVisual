@@ -18,11 +18,11 @@ public class Main {
             System.out.println(e.getMessage());
         }
     }
-    private static Point random(){
+    private static Point random(int x,int y,int y2){
         Point p= new Point(0,0);
         Random ran= new Random();
-        p.setX(ran.nextInt(800));
-        p.setY(ran.nextInt(600));
+        p.setX(ran.nextInt(x));
+        p.setY(Math.random() * ((y2-y)+1)+y);
         return p;
     }
     private void initGetClassInfo() throws IOException {
@@ -37,8 +37,14 @@ public class Main {
         JFrame frame = new JFrame("FileVisual");
 
         for(ObjectClasses ob:m.lisClasses){
-            Table table=new Table(random(),ob);
-            layer.addTable(table);
+            if(ob.hasParents==false) {
+                Table table = new Table(random(800,0,200), ob);
+                layer.addTable(table);
+            } else {
+                Table table = new Table(random(800,210,500),ob);
+                layer.addTable(table);
+            }
+            //layer.addTable(table);
         }
 
 
