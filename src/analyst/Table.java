@@ -15,9 +15,6 @@ public class Table {
         this.position=position;
         this.objectclass=objectclass;
     }
-    public boolean containsMouse(MouseEvent mouseEvent) {
-        return Rect_frame.contains(mouseEvent.getX() , mouseEvent.getY() );
-    }
 
     private Double[] getRectSize(Graphics g, String s, Font f) {
         return new Double[]{Size.getWidth(g, objectclass.name, f), Size.getHeight(g, f)};
@@ -34,10 +31,10 @@ public class Table {
       return new Double[]{maxWidth+20, height};
     }
 
-    public void draw(Graphics g){
+    public void draw(Graphics g) {
         Graphics2D g2 = (Graphics2D) g;
         //Font font = g.getFont().deriveFont(Font.BOLD);
-        Font font = new Font("TimesRoman",Font.BOLD|Font.ITALIC,16);
+        Font font = new Font("TimesRoman", Font.BOLD | Font.ITALIC, 16);
         g.setFont(font);
 
         Double[] titleSize = getRectSize(g, objectclass.to_String(), font);
@@ -61,13 +58,30 @@ public class Table {
         g2.draw(methodRect);
         g2.draw(Rect_frame);
 
-        g.drawString(objectclass.name, (int)(position.getX() + (maxWidth-Size.getWidth(g,objectclass.name,font))/2), (int)position.getY()+13);
+        g.drawString(objectclass.name, (int) (position.getX() + (maxWidth - Size.getWidth(g, objectclass.name, font)) / 2), (int) position.getY() + 13);
 
         g.setFont(font.deriveFont(Font.PLAIN));  //set font for properties
 
-
-
-
+        int i = 0, lineHeight = (int) Size.getHeight(g, font);
+        for (String s : objectclass.StringFields) {
+            g.drawString(s, (int) position.getX() + 3, (int) (position.getY() + 12 + titleSize[1] + i * lineHeight));
+            i++;
+        }
+        i = 0;
+        for (String s : objectclass.StringMethods) {
+            g.drawString(s, (int) position.getX() + 3, (int) (position.getY() + 12 + titleSize[1] + fieldSize[1] + i * lineHeight));
+            i++;
+        }
+    }
+    public boolean containsMouse(MouseEvent mouseEvent) {
+        return Rect_frame.contains(mouseEvent.getX() , mouseEvent.getY() );
+    }
+        public void move(int moveX, int moveY)  {
+            double x = position.getX() + moveX;
+            double y = position.getY() + moveY;
+            position.setX(x);
+            position.setY(y);
+        }
 
     }
 
@@ -79,4 +93,5 @@ public class Table {
 
 
 
-}
+
+

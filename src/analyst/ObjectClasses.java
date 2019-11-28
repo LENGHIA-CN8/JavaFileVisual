@@ -50,12 +50,13 @@ public class ObjectClasses {
             for(ObjectFields f:ListFields){
                   StringFields.add(f.to_String());
             }
+            for(ObjectConstructors c:ListConstructors){
+                  StringMethods.add(c.to_String());
+            }
             for(ObjectMethods m:ListMethods){
                   StringMethods.add(m.to_String());
             }
-            for(ObjectConstructors c:ListConstructors){
-                  StringConstructors.add(c.to_String());
-            }
+
       }
       public void show(){
 

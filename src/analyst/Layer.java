@@ -8,15 +8,14 @@ import java.util.List;
 
 public class Layer extends JPanel implements ActionListener, MouseMotionListener, MouseListener {
     private List<Table> tables = new ArrayList<>();
-    //private List<ObjectClasses> listclasses= new ArrayList<>();
+
     Timer t = new Timer(1, this);
+    private Point mouseposition= new Point(0,0);
 
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
-        setBackground(Color.WHITE);
-        //g.drawRect(x, y, width, height);
-
+        setBackground(Color.LIGHT_GRAY);
         tables.forEach(table -> table.draw(g));
         t.start();
     }
@@ -30,7 +29,7 @@ public class Layer extends JPanel implements ActionListener, MouseMotionListener
 
     @Override
     public void actionPerformed (ActionEvent e) {
-
+        repaint();
     }
 
     @Override
@@ -40,12 +39,31 @@ public class Layer extends JPanel implements ActionListener, MouseMotionListener
 
     @Override
     public void mousePressed (MouseEvent e) {
-
+          mouseposition.setX(e.getX());
+          mouseposition.setY(e.getY());
+//          for(int i=0;i<tables.size();i++){
+//              if(tables.get(i).containsMouse(e)){
+//
+//                  //break;
+//              }
+//          }
+    }
+    @Override
+    public void mouseDragged (MouseEvent e) {
+          for(int i=0;i<tables.size();i++){
+              if(tables.get(i).containsMouse(e)){
+                  tables.get(i).move((int)(e.getX() - mouseposition.getX()),(int)( e.getY() - mouseposition.getY()));
+                  mouseposition.setX(e.getX());
+                  mouseposition.setY(e.getY());
+                 // break;
+              }
+          }
     }
 
     @Override
     public void mouseReleased (MouseEvent e) {
-
+          mouseposition.setX(0);
+          mouseposition.setY(0);
     }
 
     @Override
@@ -58,12 +76,8 @@ public class Layer extends JPanel implements ActionListener, MouseMotionListener
 
     }
 
-    @Override
-    public void mouseDragged (MouseEvent e) {
 
-    }
-
-    @Override
+   @Override
     public void mouseMoved (MouseEvent e) {
 
     }

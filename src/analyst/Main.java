@@ -17,10 +17,10 @@ public class Main {
         }
     }
     private static Point random(){
-        Point p= new Point();
+        Point p= new Point(0,0);
         Random ran= new Random();
-        p.x=ran.nextInt(600);
-        p.y=ran.nextInt(500);
+        p.setX(ran.nextInt(800));
+        p.setY(ran.nextInt(600));
         return p;
     }
     private void initGetClassInfo() throws IOException {
@@ -33,8 +33,7 @@ public class Main {
         Main m=new Main();
         Layer layer = new Layer();
         JFrame frame = new JFrame("FileVisual");
-        System.out.println(m.lisClasses.size());
-        System.out.println(m.lisClasses.get(0).ListFields.size());
+
         for(ObjectClasses ob:m.lisClasses){
             Table table=new Table(random(),ob);
             layer.addTable(table);
@@ -45,7 +44,7 @@ public class Main {
         frame.addMouseListener(layer);
         frame.addMouseMotionListener(layer);
 
-        frame.setSize(1000, 1000);
+        frame.setSize(1200, 1000);
         frame.setResizable(false);
         frame.setVisible(true);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
