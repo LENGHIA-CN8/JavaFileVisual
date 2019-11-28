@@ -2,6 +2,7 @@ package analyst;
 
 import java.awt.*;
 import java.awt.event.MouseEvent;
+import java.awt.event.MouseWheelEvent;
 import java.awt.geom.Rectangle2D;
 import java.util.List;
 
@@ -11,6 +12,7 @@ public class Table {
     public double width;
     public double height;
     Rectangle2D Rect_frame;
+    Font font = new Font("TimesRoman", Font.BOLD | Font.ITALIC, 15);
     public Table(Point position,ObjectClasses objectclass){
         this.position=position;
         this.objectclass=objectclass;
@@ -34,7 +36,7 @@ public class Table {
     public void draw(Graphics g) {
         Graphics2D g2 = (Graphics2D) g;
         //Font font = g.getFont().deriveFont(Font.BOLD);
-        Font font = new Font("TimesRoman", Font.BOLD | Font.ITALIC, 16);
+        //Font font = new Font("TimesRoman", Font.BOLD | Font.ITALIC, 16);
         g.setFont(font);
 
         Double[] titleSize = getRectSize(g, objectclass.to_String(), font);
@@ -79,8 +81,21 @@ public class Table {
         public void move(int moveX, int moveY)  {
             double x = position.getX() + moveX;
             double y = position.getY() + moveY;
-            position.setX(x);
-            position.setY(y);
+            if(x+width<Main.width && x>0) {
+                position.setX(x);
+            }
+            if(y+height<Main.height && y>0) {
+                position.setY(y);
+            }
+        }
+        public void scale(MouseWheelEvent e){
+            if (e.getScrollType() == MouseWheelEvent.WHEEL_UNIT_SCROLL) {
+                //System.out.println(font.getSize());
+                float amount =  font.getSize()+e.getWheelRotation() * 5;
+                //System.out.println(amount);
+                font.deriveFont(amount);
+
+            }
         }
 
     }

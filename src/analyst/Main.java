@@ -8,6 +8,8 @@ import java.util.List;
 import java.util.Random;
 
 public class Main {
+    static int width = 1200;
+    static int height = 1000;
     List<ObjectClasses> lisClasses= new ArrayList<>();
     public Main() {
         try {
@@ -31,7 +33,7 @@ public class Main {
     }
     public static void main(String[] args){
         Main m=new Main();
-        Layer layer = new Layer();
+        Layer layer = new Layer(m.lisClasses);
         JFrame frame = new JFrame("FileVisual");
 
         for(ObjectClasses ob:m.lisClasses){
@@ -43,9 +45,10 @@ public class Main {
         frame.add(layer);
         frame.addMouseListener(layer);
         frame.addMouseMotionListener(layer);
+        frame.addMouseWheelListener(layer);
 
-        frame.setSize(1200, 1000);
-        frame.setResizable(false);
+        frame.setSize(width, height);
+        frame.setResizable(true);
         frame.setVisible(true);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
