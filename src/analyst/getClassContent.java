@@ -8,21 +8,22 @@ public class getClassContent {
 
     public getClassContent (String path) throws IOException {
         listOfFiles=new File[100];
-        ListFileFromFolder("");
+        ListFileFromFolder(path);
     }
 
     public File[] ListFileFromFolder (String path) throws IOException {
-        File folder = new File("/Users/user/Desktop/Dahinh2/src");
-        //File folder = new File("/Users/user/Desktop/JavaFileVisual");
-        FilenameFilter filter = (dir, name) -> {
-            if (name.endsWith(".java")) {
-                return true;
-            } else {
-                return false;
-            }
-        };
+            File folder = new File(path);
 
-        listOfFiles=folder.listFiles(filter);
+            FilenameFilter filter = (dir, name) -> {
+                if (name.endsWith(".java")) {
+                    return true;
+                } else {
+                    return false;
+                }
+            };
+
+            listOfFiles = folder.listFiles(filter);
+
         return listOfFiles;
     }
     public List<String> readContentFromFile(File file) throws IOException {
