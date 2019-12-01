@@ -1,10 +1,15 @@
 package analyst;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.filechooser.FileSystemView;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.image.BufferedImage;
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -65,10 +70,19 @@ public class Main extends JFrame{
                  }
              }
          });
+         save.addActionListener(new ActionListener() {
+             @Override
+             public void actionPerformed (ActionEvent e) {
+                 if(e.getSource()==save){
+                     saveComponent(layer,"test.jpg");
+                     System.out.println("saving");
+                 }
+             }
+         });
 
             buttonbar.setLayout(new BoxLayout(buttonbar,BoxLayout.Y_AXIS));
             //buttonbar.setPreferredSize(new Dimension(60,100));
-            //open.setPreferredSize(new Dimension(50,30));
+            layer.setPreferredSize(new Dimension(1200,700));
 
             buttonbar.add(open);
             buttonbar.add(save);
@@ -87,6 +101,21 @@ public class Main extends JFrame{
             frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
 
+    }
+    public void saveComponent(Component c, String filename) {
+        Dimension d = c.getPreferredSize();
+        BufferedImage bi = new BufferedImage((int) d.getWidth(), (int) d.getHeight(),
+                BufferedImage.TYPE_INT_RGB);
+
+        Graphics2D g2 = bi.createGraphics();
+        //g2.setClip(0, 0, (int) d.getWidth(), (int) d.getHeight());
+        c.paint(g2);
+        try {
+            ImageIO.write(bi,"jpg", new File(filename));
+        }
+        catch(Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private void initGetClassPath ()  {
