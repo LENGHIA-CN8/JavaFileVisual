@@ -55,11 +55,19 @@ public class Draw extends JPanel implements ActionListener, MouseMotionListener,
                                             BasicStroke.JOIN_BEVEL);
                                     g2.setStroke(bs1);
                                 }
-                                g2.drawLine((int) (table.position.getX() + table.width / 2), (int) table.position.getY(), (int) (j.position.getX() + j.width / 2), (int) (j.position.getY() + j.height + 10));
+                                int x=(int) (table.position.getX() + table.width / 2);
+                                int y=(int) table.position.getY();
+                                int _x=(int) (j.position.getX() + j.width / 2);
+                                int _y=(int) (j.position.getY() + j.height + 10);
+
+                                g2.drawLine(_x, y + (_y - y)/2, _x, _y);
+                                g2.drawLine(x, y + (_y - y)/2, _x, y + (_y - y)/2);
+                                g2.drawLine(x, y, x, y + (_y - y)/2);
+
                                 Path2D mypath = new Path2D.Double();
                                 mypath.moveTo((int) (j.position.getX() + j.width / 2), (int) (j.position.getY() + j.height));
-                                mypath.lineTo((int) (j.position.getX() + j.width / 2 + 10), (int) (j.position.getY() + j.height + 10));
-                                mypath.lineTo((int) (j.position.getX() + j.width / 2 - 10), (int) (j.position.getY() + j.height + 10));
+                                mypath.lineTo((int) (j.position.getX() + j.width / 2 + 5), (int) (j.position.getY() + j.height + 10));
+                                mypath.lineTo((int) (j.position.getX() + j.width / 2 - 5), (int) (j.position.getY() + j.height + 10));
                                 mypath.closePath();
                                 g2.setPaint(Color.WHITE);
                                 g2.fill(mypath);

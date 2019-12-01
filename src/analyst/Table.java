@@ -4,11 +4,13 @@ import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseWheelEvent;
 import java.awt.geom.Rectangle2D;
+import java.util.ArrayList;
 import java.util.List;
 
 public class Table {
     ObjectClasses objectclass;
-    public Point position;
+    public Table parentTable;
+    public Point position,top,bot;
     public double width;
     public double height;
     Rectangle2D Rect_frame;
@@ -32,7 +34,15 @@ public class Table {
         }
       return new Double[]{maxWidth+20, height};
     }
-
+    public void findParentTable(ArrayList<Table> tables) {
+        if (objectclass.parent.isEmpty()) return;
+        for (Table table : tables) {
+            if (table.objectclass.name.equals(objectclass.parent.get(0))) {
+                parentTable = table;
+                return;
+            }
+        }
+    }
     public void draw(Graphics g) {
         Graphics2D g2 = (Graphics2D) g;
         //Font font = g.getFont().deriveFont(Font.BOLD);
@@ -51,6 +61,8 @@ public class Table {
         width = maxWidth;
         height = titleSize[1] + fieldSize[1] + methodSize[1];
         Rect_frame = new Rectangle2D.Double(position.getX(), position.getY(), width, height);
+        top = new Point((int)(position.getX() + width/2), (int)position.getY());
+        bot = new Point((int)(position.getX() + width/2), (int)(position.getY() + height));
 
         g2.setColor(Color.DARK_GRAY);       //draw Rect
         g2.fill(Rect_frame);
