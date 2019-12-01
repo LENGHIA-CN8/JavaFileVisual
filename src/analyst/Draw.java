@@ -16,12 +16,16 @@ public class Draw extends JPanel implements ActionListener, MouseMotionListener,
 
     private List<ObjectClasses> classes= new ArrayList<>();
 
+
     Draw(List<ObjectClasses> _classes){
         this.classes=_classes;
 
     }
     public void setlist(List<ObjectClasses> _classes){
         this.classes=_classes;
+    }
+    public void removealltable(){
+        tables.removeAll(tables);
     }
     Timer t = new Timer(1, this);
     private Point mouseposition= new Point(0,0);
@@ -37,26 +41,29 @@ public class Draw extends JPanel implements ActionListener, MouseMotionListener,
             for (Table table : tables) {
                 if (table.objectclass.hasParents == true) {
                     for (Table j : tables) {
-                        if (table.objectclass.parent.get(0).equals(j.objectclass.name)) {
+                        for (int i = 0; i < table.objectclass.parent.size(); i++) {
+                            //if(!table.objectclass.parent.isEmpty()){
+                            if (table.objectclass.parent.get(i).equals(j.objectclass.name)) {
 
-                            if (j.objectclass.othr.equals("interface")) {
-                                float[] dash3 = {4f, 0f, 2f};
-                                BasicStroke bs3 = new BasicStroke(1, BasicStroke.CAP_BUTT,
-                                        BasicStroke.JOIN_ROUND, 1.0f, dash3, 2f);
-                                g2.setStroke(bs3);
-                            } else {
-                                BasicStroke bs1 = new BasicStroke(2, BasicStroke.CAP_BUTT,
-                                        BasicStroke.JOIN_BEVEL);
-                                g2.setStroke(bs1);
+                                if (j.objectclass.othr.equals("interface")) {
+                                    float[] dash3 = {4f, 0f, 2f};
+                                    BasicStroke bs3 = new BasicStroke(1, BasicStroke.CAP_BUTT,
+                                            BasicStroke.JOIN_ROUND, 1.0f, dash3, 2f);
+                                    g2.setStroke(bs3);
+                                } else {
+                                    BasicStroke bs1 = new BasicStroke(2, BasicStroke.CAP_BUTT,
+                                            BasicStroke.JOIN_BEVEL);
+                                    g2.setStroke(bs1);
+                                }
+                                g2.drawLine((int) (table.position.getX() + table.width / 2), (int) table.position.getY(), (int) (j.position.getX() + j.width / 2), (int) (j.position.getY() + j.height + 10));
+                                Path2D mypath = new Path2D.Double();
+                                mypath.moveTo((int) (j.position.getX() + j.width / 2), (int) (j.position.getY() + j.height));
+                                mypath.lineTo((int) (j.position.getX() + j.width / 2 + 10), (int) (j.position.getY() + j.height + 10));
+                                mypath.lineTo((int) (j.position.getX() + j.width / 2 - 10), (int) (j.position.getY() + j.height + 10));
+                                mypath.closePath();
+                                g2.setPaint(Color.WHITE);
+                                g2.fill(mypath);
                             }
-                            g2.drawLine((int) (table.position.getX() + table.width / 2), (int) table.position.getY(), (int) (j.position.getX() + j.width / 2), (int) (j.position.getY() + j.height + 10));
-                            Path2D mypath = new Path2D.Double();
-                            mypath.moveTo((int) (j.position.getX() + j.width / 2), (int) (j.position.getY() + j.height));
-                            mypath.lineTo((int) (j.position.getX() + j.width / 2 + 10), (int) (j.position.getY() + j.height + 10));
-                            mypath.lineTo((int) (j.position.getX() + j.width / 2 - 10), (int) (j.position.getY() + j.height + 10));
-                            mypath.closePath();
-                            g2.setPaint(Color.WHITE);
-                            g2.fill(mypath);
                         }
                     }
                 }

@@ -19,7 +19,7 @@ public class Table {
     }
 
     private Double[] getRectSize(Graphics g, String s, Font f) {
-        return new Double[]{Size.getWidth(g, objectclass.name, f), Size.getHeight(g, f)};
+        return new Double[]{Size.getWidth(g, objectclass.to_String(), f)+120, Size.getHeight(g, f)};
     }
 
     private Double[] getRectSize(Graphics g, List<String> properties , Font f) {
@@ -76,13 +76,14 @@ public class Table {
         }
     }
     public boolean containsMouse(MouseEvent mouseEvent) {
-        return Rect_frame.contains(mouseEvent.getX() , mouseEvent.getY() );
+        return Rect_frame.contains(mouseEvent.getX()  , mouseEvent.getY() );
     }
         public void move(int moveX, int moveY)  {
             double x = position.getX() + moveX;
             double y = position.getY() + moveY;
             if(x+width<Main.width && x>0) {
                 position.setX(x);
+               // position.se
             }
             if(y+height<Main.height && y>0) {
                 position.setY(y);

@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-public class Main extends JFrame {
+public class Main extends JFrame{
     static int width = 1200;
     static int height = 1000;
     //private static String path;
@@ -27,25 +27,33 @@ public class Main extends JFrame {
 
          JFrame frame=new JFrame("FileVisual");
          JButton open = new JButton("Open");
-         open.setBounds(50,50,100,100);
+         JPanel buttonbar= new JPanel();
+         open.setBounds(0,0,100,100);
          open.addActionListener(new ActionListener() {
              @Override
              public void actionPerformed (ActionEvent e) {
-                 initGetClassInfo();
-                 isopen=true;
+                 initGetClassPath();
+                 //isopen=true;
                  try {
-                     parser = new Parser(path);
-                     parser.handle();
-                     lisClasses = parser.listofObjectClasses;
+                     if(!path.equals("")) {
+                         //parser = new Parser("/Users/user/Desktop/JavaFileVisual/Nghia.java");
+                         parser = new Parser(path);
+                         parser.handle();
+                         lisClasses = parser.listofObjectClasses;
+                     }
+                     layer.removealltable();
                      layer.setlist(lisClasses);
-                     for (ObjectClasses ob : lisClasses) {
-                         if (ob.hasParents == false) {
-                             Table table = new Table(random(800, 0, 200), ob);
-                             layer.addTable(table);
-                         } else {
-                             Table table = new Table(random(800, 300, 500), ob);
-                             layer.addTable(table);
+                     if(!path.equals("")) {
+                         for (ObjectClasses ob : lisClasses) {
+                             if (ob.hasParents == false) {
+                                 Table table = new Table(random(800, 0, 200), ob);
+                                 layer.addTable(table);
+                             } else {
+                                 Table table = new Table(random(800, 300, 500), ob);
+                                 layer.addTable(table);
+                             }
                          }
+                         path="";
                      }
 
                  } catch (IOException ex) {
@@ -53,7 +61,10 @@ public class Main extends JFrame {
                  }
              }
          });
-            layer.add(open);
+            buttonbar.setPreferredSize(new Dimension(100,100));
+            buttonbar.setLocation(0,0);
+            buttonbar.add(open);
+            layer.add(buttonbar,BorderLayout.WEST);
 
             frame.add(layer);
             //frame.add(open);
@@ -66,80 +77,25 @@ public class Main extends JFrame {
             frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
 
-//            layer = new Draw(lisClasses);
-//            frame = new JFrame("FileVisual");
-//
-////            for(ObjectClasses ob:lisClasses){
-////                if(ob.hasParents==false) {
-////                    Table table = new Table(random(800,0,200), ob);
-////                    layer.addTable(table);
-////                } else {
-////                    Table table = new Table(random(800,300,500),ob);
-////                    layer.addTable(table);
-////                }
-////            }
-////            open.addActionListener(new ActionListener() {
-////                @Override
-////                public void actionPerformed (ActionEvent e) {
-////                    if(e.getSource()==open){
-////                        JFileChooser file_chooser=new JFileChooser(FileSystemView.getFileSystemView().getHomeDirectory());
-////                        file_chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-////                        int returnval=file_chooser.showOpenDialog(null);
-////                        if(returnval==JFileChooser.APPROVE_OPTION){
-////                            choser=file_chooser.getSelectedFile().getAbsolutePath();
-////                            System.out.println(choser);
-////                            try {
-////                                parser=new Parser(choser);
-////                                parser.handle();
-////                                lisClasses=parser.listofObjectClasses;
-////                                layer = new Draw(lisClasses);
-////                                for(ObjectClasses ob:lisClasses){
-////                                    if(ob.hasParents==false) {
-////                                        Table table = new Table(random(800,0,200), ob);
-////                                        layer.addTable(table);
-////                                    } else {
-////                                        Table table = new Table(random(800,300,500),ob);
-////                                        layer.addTable(table);
-////                                    }
-////                                }
-////                                layer.add(open);
-////                                frame.setSize(width, height);
-////                                frame.add(layer);
-////                                frame.addMouseListener(layer);
-////                                frame.addMouseMotionListener(layer);
-////                                frame.addMouseWheelListener(layer);
-////
-////                            } catch (IOException ex) {
-////                                ex.printStackTrace();
-////                            }
-////                        }
-////                    } else {
-////                        choser="";
-////                    }
-////                }
-////            });
-//            layer.add(open);
-//
-//            frame.add(layer);
-//            frame.addMouseListener(layer);
-//            frame.addMouseMotionListener(layer);
-//            frame.addMouseWheelListener(layer);
-//
-//            frame.setSize(width, height);
-//            frame.setResizable(true);
-//            frame.setVisible(true);
-//            frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
     }
 
-    private void initGetClassInfo ()  {
+    private void initGetClassPath ()  {
         JFileChooser file_chooser = new JFileChooser(FileSystemView.getFileSystemView().getHomeDirectory());
-        file_chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+        file_chooser.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
         int returnval = file_chooser.showOpenDialog(null);
         if (returnval == JFileChooser.APPROVE_OPTION) {
-            path = file_chooser.getSelectedFile().getAbsolutePath();
+            String path1 = file_chooser.getSelectedFile().getAbsolutePath();
+
+            if(path.equals("")||!path.equals(path1)){
+                //System.out.println("yes");
+                path=path1;
+            } else {
+                path="";
+            }
+            System.out.println(path1);
         }
     }
+
 
 
 

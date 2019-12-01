@@ -17,15 +17,4 @@ public class Point {
         return Math.sqrt((x - other.x) * (x - other.x) + (y - other.y) * (y - other.y));
     }
 
-    public String toString() {
-        return "(" + String.format("%.1f", x) + "," + String.format("%.1f", y) + ")";
-    }
-
-    public boolean equals(Object o) {
-        if (!(o instanceof Point)) return false;
-        if (this == o) return true;
-        Point _o = (Point) o;
-        return Math.abs(x - _o.getX()) <= 0.001 &&
-                Math.abs(y - _o.getY()) <= 0.001;
-    }
 }

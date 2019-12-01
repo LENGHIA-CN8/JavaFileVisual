@@ -33,6 +33,8 @@ public class Parser extends getClassContent {
                     content = readContentFromFile(file);
                 } catch (IOException e) {
                     e.getMessage();
+                } catch (NullPointerException e){
+                    e.getCause();
                 }
                 System.out.println(content);
                 for (int i = 0; i < content.size(); i++) {
@@ -115,6 +117,7 @@ public class Parser extends getClassContent {
         //create a new Objectclasses
         ob=new ObjectClasses(ObjectCurrentName.peek(),AccessModCurrent.peek(),othersCurrent.peek());
         //check has Parents
+        boolean isimplements=false;
         while(!content.get(i).equals("{")){
             if(content.get(i).equals("implements")||content.get(i).equals("extends")){
                 ob.hasParents=true;
@@ -122,8 +125,15 @@ public class Parser extends getClassContent {
                 //break;
             }
            if(content.get(i).equals("extends")) ob.parent.add(content.get(i+1));
-           //if(content.get(i).equals("implements"))
+           if(content.get(i).equals("implements")) {
+               isimplements = true;
+           }
+           if(isimplements==true) {
+               if (content.get(i).equals(",")) ob.parent.add(content.get(i - 1));
+           }
+
             i++;
+           if(content.get(i).equals("{")&&isimplements) ob.parent.add(content.get(i-1));
         }
     }
     public void handle_constructor(int i){

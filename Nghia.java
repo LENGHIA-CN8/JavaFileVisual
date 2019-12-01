@@ -1,6 +1,6 @@
 import java.awt.*;
 
-public abstract class Shape {
+public abstract class Shape extends hi implements hello, nghia {
     protected String color;
     protected boolean filled;
 
