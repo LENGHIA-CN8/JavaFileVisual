@@ -26,9 +26,13 @@ public class Main extends JFrame{
     public Main () throws IOException {
 
          JFrame frame=new JFrame("FileVisual");
-         JButton open = new JButton("Open");
+         ImageIcon openicon= new ImageIcon("/Users/user/Desktop/JavaFileVisual/openicon.png");
+         ImageIcon saveicon= new ImageIcon("/Users/user/Desktop/JavaFileVisual/save-icon2.png");
+         JButton open = new JButton(openicon);
+         JButton save = new JButton(saveicon);
+         //JToolBar buttonbar= new JToolBar(JToolBar.VERTICAL);
          JPanel buttonbar= new JPanel();
-         open.setBounds(0,0,100,100);
+
          open.addActionListener(new ActionListener() {
              @Override
              public void actionPerformed (ActionEvent e) {
@@ -61,18 +65,24 @@ public class Main extends JFrame{
                  }
              }
          });
-            buttonbar.setPreferredSize(new Dimension(100,100));
-            buttonbar.setLocation(0,0);
-            buttonbar.add(open);
-            layer.add(buttonbar,BorderLayout.WEST);
 
+            buttonbar.setLayout(new BoxLayout(buttonbar,BoxLayout.Y_AXIS));
+            //buttonbar.setPreferredSize(new Dimension(60,100));
+            //open.setPreferredSize(new Dimension(50,30));
+
+            buttonbar.add(open);
+            buttonbar.add(save);
+
+            frame.add(buttonbar,BorderLayout.WEST);
             frame.add(layer);
-            //frame.add(open);
             frame.addMouseListener(layer);
             frame.addMouseMotionListener(layer);
             frame.setVisible(true);
+            //frame.setBounds(100,100,500,500);
+
 
             frame.setSize(width, height);
+            frame.setLocationRelativeTo(null);
             frame.setResizable(true);
             frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
@@ -109,31 +119,6 @@ public class Main extends JFrame{
 
     }
 
-
-
-//        Draw layer = new Draw(m.lisClasses);
-//        JFrame frame = new JFrame("FileVisual");
-//
-//        for(ObjectClasses ob:m.lisClasses){
-//            if(ob.hasParents==false) {
-//                Table table = new Table(random(800,0,200), ob);
-//                layer.addTable(table);
-//            } else {
-//                Table table = new Table(random(800,300,500),ob);
-//                layer.addTable(table);
-//            }
-//        }
-//
-//        frame.setSize(width, height);
-//        frame.add(layer);
-//        frame.addMouseListener(layer);
-//        frame.addMouseMotionListener(layer);
-//        frame.addMouseWheelListener(layer);
-//        //frame.add(button);
-//
-//        frame.setResizable(true);
-//        frame.setVisible(true);
-//        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     private static Point random(int x,int y,int y2){
         Point p= new Point(0,0);
         Random ran= new Random();
