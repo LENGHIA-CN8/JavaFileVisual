@@ -10,40 +10,35 @@ import java.util.List;
 public class Table {
     ObjectClasses objectclass;
     public Table parentTable;
-    public Point position,top,bot;
+    public Point position, top, bot;
     public double width;
     public double height;
     Rectangle2D Rect_frame;
+    boolean iszoom;
     Font font = new Font("TimesRoman", Font.BOLD | Font.ITALIC, 15);
-    public Table(Point position,ObjectClasses objectclass){
-        this.position=position;
-        this.objectclass=objectclass;
+
+    public Table (Point position, ObjectClasses objectclass, boolean _iszoom) {
+        this.position = position;
+        this.objectclass = objectclass;
+        this.iszoom = _iszoom;
     }
 
-    private Double[] getRectSize(Graphics g, String s, Font f) {
-        return new Double[]{Size.getWidth(g, objectclass.to_String(), f)+120, Size.getHeight(g, f)};
+    private Double[] getRectSize (Graphics g, String s, Font f) {
+        return new Double[]{Size.getWidth(g, objectclass.to_String(), f) + 120, Size.getHeight(g, f)};
     }
 
-    private Double[] getRectSize(Graphics g, List<String> properties , Font f) {
+    private Double[] getRectSize (Graphics g, List<String> properties, Font f) {
         double maxWidth = 0;
         double height = 0;
-       // System.out.println(properties.size());
-      for (String p:properties) {
-              height += Size.getHeight(g, f);
-              maxWidth = Math.max(maxWidth, Size.getWidth(g,p+"    ", f));
+        // System.out.println(properties.size());
+        for (String p : properties) {
+            height += Size.getHeight(g, f);
+            maxWidth = Math.max(maxWidth, Size.getWidth(g, p + "    ", f));
         }
-      return new Double[]{maxWidth+20, height};
+        return new Double[]{maxWidth + 20, height};
     }
-    public void findParentTable(ArrayList<Table> tables) {
-        if (objectclass.parent.isEmpty()) return;
-        for (Table table : tables) {
-            if (table.objectclass.name.equals(objectclass.parent.get(0))) {
-                parentTable = table;
-                return;
-            }
-        }
-    }
-    public void draw(Graphics g) {
+
+    public void draw (Graphics g) {
         Graphics2D g2 = (Graphics2D) g;
         //Font font = g.getFont().deriveFont(Font.BOLD);
         //Font font = new Font("TimesRoman", Font.BOLD | Font.ITALIC, 16);
@@ -53,16 +48,22 @@ public class Table {
         Double[] fieldSize = getRectSize(g, objectclass.StringFields, font);
         Double[] methodSize = getRectSize(g, objectclass.StringMethods, font);
         double maxWidth = Math.max(titleSize[0], Math.max(fieldSize[0], methodSize[0]));
-
         Rectangle2D titleRect = new Rectangle2D.Double(position.getX(), position.getY(), maxWidth, titleSize[1]);
-        Rectangle2D fieldRect = new Rectangle2D.Double(position.getX(), position.getY() + titleSize[1], maxWidth, fieldSize[1]);
-        Rectangle2D methodRect = new Rectangle2D.Double(position.getX(), position.getY() + titleSize[1] + fieldSize[1], maxWidth, methodSize[1]);
+        Rectangle2D fieldRect;
+        Rectangle2D methodRect;
+        if(!iszoom) {
+            fieldRect = new Rectangle2D.Double(position.getX(), position.getY() + titleSize[1], maxWidth, fieldSize[1]);
+            methodRect = new Rectangle2D.Double(position.getX(), position.getY() + titleSize[1] + fieldSize[1], maxWidth, methodSize[1]);
+        } else {
+            fieldRect = new Rectangle2D.Double(position.getX(), position.getY() + titleSize[1],maxWidth , 0);
+            methodRect = new Rectangle2D.Double(position.getX(), position.getY() + titleSize[1] + fieldSize[1], maxWidth, 0);
+        }
 
         width = maxWidth;
         height = titleSize[1] + fieldSize[1] + methodSize[1];
         Rect_frame = new Rectangle2D.Double(position.getX(), position.getY(), width, height);
-        top = new Point((int)(position.getX() + width/2), (int)position.getY());
-        bot = new Point((int)(position.getX() + width/2), (int)(position.getY() + height));
+        top = new Point((int) (position.getX() + width / 2), (int) position.getY());
+        bot = new Point((int) (position.getX() + width / 2), (int) (position.getY() + height));
 
         g2.setColor(Color.DARK_GRAY);       //draw Rect
         g2.fill(Rect_frame);
@@ -87,6 +88,7 @@ public class Table {
             i++;
         }
     }
+    //public void zoom(E e){
     public boolean containsMouse(MouseEvent mouseEvent) {
         return Rect_frame.contains(mouseEvent.getX()  , mouseEvent.getY() );
     }

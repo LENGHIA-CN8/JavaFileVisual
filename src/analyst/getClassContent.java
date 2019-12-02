@@ -57,7 +57,7 @@ public class getClassContent {
                         int idx1 = s.indexOf(";");
                         content.add(s.substring(0, idx1));
                         content.add(";");
-                        //content.add(s.substring(idx1 + 1, s.length()));
+                        content.add(s.substring(idx1 + 1, s.length()));
                     } else if (s.contains("(") && !s.equals("(")) {
                         int idx1 = s.indexOf("(");
                         if (idx1 > 0) {

@@ -60,7 +60,7 @@ public class Parser extends getClassContent {
                                     i++;
                                 } else i++;
                             }
-                        } else if (content.get(i).equals("(") && !content.get(i - 1).equals(ObjectCurrentName.get(0))) {
+                        } else if ((content.get(i).equals("(") && !content.get(i - 1).equals(ObjectCurrentName.get(0)))||(content.get(i).equals("()") && !content.get(i - 1).equals(ObjectCurrentName.get(0)))) {
 
                             handle_method(i);        //handle method
                             if (obmethod.othr.equals("abstract")) {
@@ -82,6 +82,16 @@ public class Parser extends getClassContent {
                 listofObjectClasses.add(ob);
                 renew();
             }
+//            for(ObjectClasses pa:listofObjectClasses){
+//                for(ObjectClasses chi:listofObjectClasses){
+//                    for(String namepa:chi.parent){
+//                        if(namepa.equals(pa.name)){
+//                            pa.children.add(chi);
+//                            listofObjectClasses.remove(chi);
+//                        }
+//                    }
+//                }
+//            }
             System.out.println(Arrays.deepToString(listOfFiles));
 
 
@@ -192,6 +202,7 @@ public class Parser extends getClassContent {
             obfield= new ObjectFields(ObjectCurrentName.pop(),typeCurrent.pop(),AccessModCurrent.pop());
         }
         ob.ListFields.add(obfield);
+
         System.out.println(obfield.to_String());
    }
    public void handle_method(int i) {

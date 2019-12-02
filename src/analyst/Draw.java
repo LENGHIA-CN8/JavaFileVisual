@@ -11,8 +11,7 @@ import java.util.List;
 
 public class Draw extends JPanel implements ActionListener, MouseMotionListener, MouseListener,MouseWheelListener {
     private List<Table> tables = new ArrayList<>();
-    JButton button= new JButton("open");
-    String pathchoser="";
+    JButton button= new JButton("zoom1");
 
     private List<ObjectClasses> classes= new ArrayList<>();
 
@@ -33,7 +32,7 @@ public class Draw extends JPanel implements ActionListener, MouseMotionListener,
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
-
+        add(button);
         setBackground(Color.LIGHT_GRAY);
         if(tables.size()>0) {
             tables.forEach(table -> table.draw(g));
@@ -87,23 +86,19 @@ public class Draw extends JPanel implements ActionListener, MouseMotionListener,
 
 
 
-
     @Override
     public void actionPerformed (ActionEvent e) {
         if(e.getSource()==button){
-            JFileChooser file_chooser=new JFileChooser(FileSystemView.getFileSystemView().getHomeDirectory());
-            file_chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-            int returnval=file_chooser.showOpenDialog(null);
-            if(returnval==JFileChooser.APPROVE_OPTION){
-                pathchoser=file_chooser.getSelectedFile().getAbsolutePath();
-                System.out.println(pathchoser);
+            for(Table t:tables){
+                t.iszoom=true;
             }
         } else {
-            pathchoser="";
+
         }
        // System.out.println("is zooming");
         repaint();
     }
+
 
     @Override
     public void mouseClicked (MouseEvent e) {

@@ -15,10 +15,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-public class Main extends JFrame{
+public class Main {
     static int width = 1200;
     static int height = 1000;
     //private static String path;
+
     List<ObjectClasses> lisClasses = new ArrayList<>();
     String path = "";
 
@@ -35,8 +36,10 @@ public class Main extends JFrame{
          ImageIcon saveicon= new ImageIcon("/Users/user/Desktop/JavaFileVisual/save-icon2.png");
          JButton open = new JButton(openicon);
          JButton save = new JButton(saveicon);
+         JButton zoom = new JButton("Zoom");
          //JToolBar buttonbar= new JToolBar(JToolBar.VERTICAL);
          JPanel buttonbar= new JPanel();
+         Boolean iszoom=false;
 
          open.addActionListener(new ActionListener() {
              @Override
@@ -53,12 +56,15 @@ public class Main extends JFrame{
                      layer.removealltable();
                      layer.setlist(lisClasses);
                      if(!path.equals("")) {
+                         int disx =0;
+                         int disy =0;
                          for (ObjectClasses ob : lisClasses) {
                              if (ob.hasParents == false) {
-                                 Table table = new Table(random(800, 0, 200), ob);
+                                 Table table = new Table(new Point(0+disx,10), ob,iszoom);
                                  layer.addTable(table);
+                                 disx=disx+300;
                              } else {
-                                 Table table = new Table(random(800, 300, 500), ob);
+                                 Table table = new Table(random(800, 300, 500), ob,iszoom );
                                  layer.addTable(table);
                              }
                          }
@@ -79,6 +85,14 @@ public class Main extends JFrame{
                  }
              }
          });
+         zoom.addActionListener(new ActionListener() {
+             @Override
+             public void actionPerformed (ActionEvent e) {
+                 if(e.getSource()==zoom){
+
+                 }
+             }
+         });
 
             buttonbar.setLayout(new BoxLayout(buttonbar,BoxLayout.Y_AXIS));
             //buttonbar.setPreferredSize(new Dimension(60,100));
@@ -86,6 +100,7 @@ public class Main extends JFrame{
 
             buttonbar.add(open);
             buttonbar.add(save);
+            //buttonbar.add(zoom);
 
             frame.add(buttonbar,BorderLayout.WEST);
             frame.add(layer);
