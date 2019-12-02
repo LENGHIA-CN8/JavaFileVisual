@@ -34,28 +34,19 @@ public class ObjectClasses {
       }
       public String to_String(){
             String symbol=othrs.get_symbol_Other(othr);
-
-//            for(ObjectFields f:ListFields){
-//               StringFields.add(f.to_String());
-//            }
-//            for(ObjectMethods m:ListMethods){
-//                  StringMethods.add(m.to_String());
-//            }
-//            for(ObjectConstructors c:ListConstructors){
-//                  StringConstructors.add(c.to_String());
-//            }
             return name+" "+symbol;
       }
       public void SetStringForProperties(){
             for(ObjectFields f:ListFields){
                   StringFields.add(f.to_String());
             }
+            for(ObjectConstructors c:ListConstructors){
+                  StringMethods.add(c.to_String());
+            }
             for(ObjectMethods m:ListMethods){
                   StringMethods.add(m.to_String());
             }
-            for(ObjectConstructors c:ListConstructors){
-                  StringConstructors.add(c.to_String());
-            }
+
       }
       public void show(){
 

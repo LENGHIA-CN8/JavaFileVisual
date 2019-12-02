@@ -1,54 +1,174 @@
 package analyst;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
+import javax.swing.filechooser.FileSystemView;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.image.BufferedImage;
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
 public class Main {
-    List<ObjectClasses> lisClasses= new ArrayList<>();
-    public Main() {
+    static int width = 1200;
+    static int height = 1000;
+    //private static String path;
+
+    List<ObjectClasses> lisClasses = new ArrayList<>();
+    String path = "";
+
+    Parser parser;
+    boolean isopen=false;
+
+    private Draw layer=new Draw(lisClasses);
+
+
+    public Main () throws IOException {
+
+         JFrame frame=new JFrame("FileVisual");
+         ImageIcon openicon= new ImageIcon("/Users/user/Desktop/JavaFileVisual/openicon.png");
+         ImageIcon saveicon= new ImageIcon("/Users/user/Desktop/JavaFileVisual/save-icon2.png");
+         JButton open = new JButton(openicon);
+         JButton save = new JButton(saveicon);
+         JButton zoom = new JButton("Zoom");
+         //JToolBar buttonbar= new JToolBar(JToolBar.VERTICAL);
+         JPanel buttonbar= new JPanel();
+         Boolean iszoom=false;
+
+         open.addActionListener(new ActionListener() {
+             @Override
+             public void actionPerformed (ActionEvent e) {
+                 initGetClassPath();
+                 //isopen=true;
+                 try {
+                     if(!path.equals("")) {
+                         //parser = new Parser("/Users/user/Desktop/JavaFileVisual/Nghia.java");
+                         parser = new Parser(path);
+                         parser.handle();
+                         lisClasses = parser.listofObjectClasses;
+                     }
+                     layer.removealltable();
+                     layer.setlist(lisClasses);
+                     if(!path.equals("")) {
+                         int disx =0;
+                         int disy =0;
+                         for (ObjectClasses ob : lisClasses) {
+                             if (ob.hasParents == false) {
+                                 Table table = new Table(new Point(0+disx,10), ob,iszoom);
+                                 layer.addTable(table);
+                                 disx=disx+300;
+                             } else {
+                                 Table table = new Table(random(800, 300, 500), ob,iszoom );
+                                 layer.addTable(table);
+                             }
+                         }
+                         path="";
+                     }
+
+                 } catch (IOException ex) {
+                     ex.printStackTrace();
+                 }
+             }
+         });
+         save.addActionListener(new ActionListener() {
+             @Override
+             public void actionPerformed (ActionEvent e) {
+                 if(e.getSource()==save){
+                     saveComponent(layer,"test.jpg");
+                     System.out.println("saving");
+                 }
+             }
+         });
+         zoom.addActionListener(new ActionListener() {
+             @Override
+             public void actionPerformed (ActionEvent e) {
+                 if(e.getSource()==zoom){
+
+                 }
+             }
+         });
+
+            buttonbar.setLayout(new BoxLayout(buttonbar,BoxLayout.Y_AXIS));
+            //buttonbar.setPreferredSize(new Dimension(60,100));
+            layer.setPreferredSize(new Dimension(1200,700));
+
+            buttonbar.add(open);
+            buttonbar.add(save);
+            //buttonbar.add(zoom);
+
+            frame.add(buttonbar,BorderLayout.WEST);
+            frame.add(layer);
+            frame.addMouseListener(layer);
+            frame.addMouseMotionListener(layer);
+            frame.setVisible(true);
+            //frame.setBounds(100,100,500,500);
+
+
+            frame.setSize(width, height);
+            frame.setLocationRelativeTo(null);
+            frame.setResizable(true);
+            frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+
+    }
+    public void saveComponent(Component c, String filename) {
+        Dimension d = c.getPreferredSize();
+        BufferedImage bi = new BufferedImage((int) d.getWidth(), (int) d.getHeight(),
+                BufferedImage.TYPE_INT_RGB);
+
+        Graphics2D g2 = bi.createGraphics();
+        //g2.setClip(0, 0, (int) d.getWidth(), (int) d.getHeight());
+        c.paint(g2);
         try {
-            initGetClassInfo();
-        } catch (IOException e){
-            System.out.println(e.getMessage());
+            ImageIO.write(bi,"jpg", new File(filename));
+        }
+        catch(Exception e) {
+            e.printStackTrace();
         }
     }
-    private static Point random(){
-        Point p= new Point();
+
+    private void initGetClassPath ()  {
+        JFileChooser file_chooser = new JFileChooser(FileSystemView.getFileSystemView().getHomeDirectory());
+        file_chooser.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
+        int returnval = file_chooser.showOpenDialog(null);
+        if (returnval == JFileChooser.APPROVE_OPTION) {
+            String path1 = file_chooser.getSelectedFile().getAbsolutePath();
+
+            if(path.equals("")||!path.equals(path1)){
+                //System.out.println("yes");
+                path=path1;
+            } else {
+                path="";
+            }
+            System.out.println(path1);
+        }
+    }
+
+
+
+
+    public static void main (String[] args) {
+
+        try {
+            Main m= new Main();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    private static Point random(int x,int y,int y2){
+        Point p= new Point(0,0);
         Random ran= new Random();
-        p.x=ran.nextInt(600);
-        p.y=ran.nextInt(500);
+        p.setX(ran.nextInt(x));
+        p.setY(Math.random() * ((y2-y)+1)+y);
         return p;
-    }
-    private void initGetClassInfo() throws IOException {
-        Parser parser=new Parser("");
-        parser.handle();
-        lisClasses=parser.listofObjectClasses;
-
-    }
-    public static void main(String[] args){
-        Main m=new Main();
-        Layer layer = new Layer();
-        JFrame frame = new JFrame("FileVisual");
-        System.out.println(m.lisClasses.size());
-        System.out.println(m.lisClasses.get(0).ListFields.size());
-        for(ObjectClasses ob:m.lisClasses){
-            Table table=new Table(random(),ob);
-            layer.addTable(table);
-        }
-
-
-        frame.add(layer);
-        frame.addMouseListener(layer);
-        frame.addMouseMotionListener(layer);
-
-        frame.setSize(1000, 1000);
-        frame.setResizable(false);
-        frame.setVisible(true);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
 
 }

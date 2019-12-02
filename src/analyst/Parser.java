@@ -23,63 +23,77 @@ public class Parser extends getClassContent {
     public Parser(String path) throws IOException {
          super(path);
     }
+    public void setPath(String path) throws IOException {
+        ListFileFromFolder(path);
+    }
 
     public void handle() throws NullPointerException{
-        for(File file:listOfFiles ){
-            try {
-                content = readContentFromFile(file);
-            } catch(IOException e) {
-                e.getMessage();
-            }
-            System.out.println(content);
-            for(int i=0;i<content.size();i++){
-                if(content.get(i).equals("class")||content.get(i).equals("interface")) {
+            for (File file : listOfFiles) {
+                try {
+                    content = readContentFromFile(file);
+                } catch (IOException e) {
+                    e.getMessage();
+                } catch (NullPointerException e){
+                    e.getCause();
+                }
+                System.out.println(content);
+                for (int i = 0; i < content.size(); i++) {
+                    if (content.get(i).equals("class") || content.get(i).equals("interface")) {
 
-                    handle_class(i);
-                    while(!content.get(i).equals("{")) ++i;
-                    i+=2;                  //pass through "{" of outer class
-                    System.out.println(ob.to_String());
-                } else if ( ObjectCurrentName.size()>0){                 //check inside a class
-                    if(content.get(i).equals(ObjectCurrentName.get(0))&&!content.get(i-1).equals("(")&&!content.get(i-1).equals(",")) {
-                        handle_constructor(i);//handle constructor
-                        System.out.println("isconstructor");
-                    }
-                    else if(content.get(i).equals("{")) {
-                        ++i;      //pass through "{" of constructor or method
-                        cnt+=1;
-                        while (cnt!=0) {                      //discard content in method or constructor
-                            if (content.get(i).equals("{")) {
-                                cnt+=1;
-                                i++;
-                            } else if(content.get(i).equals("}")){
-                                cnt-=1;
-                                i++;
-                            } else i++;
-                        }
-                    }
-                    else if(content.get(i).equals("(") && !content.get(i-1).equals(ObjectCurrentName.get(0))){
+                        handle_class(i);
+                        while (!content.get(i).equals("{")) ++i;
+                        i += 2;                  //pass through "{" of outer class
+                        System.out.println(ob.to_String());
+                    } else if (ObjectCurrentName.size() > 0) {                 //check inside a class
+                        if (content.get(i).equals(ObjectCurrentName.get(0)) && !content.get(i - 1).equals("(") && !content.get(i - 1).equals(",")) {
+                            handle_constructor(i);//handle constructor
+                            System.out.println("isconstructor");
+                        } else if (content.get(i).equals("{")) {
+                            ++i;      //pass through "{" of constructor or method
+                            cnt += 1;
+                            while (cnt != 0) {                      //discard content in method or constructor
+                                if (content.get(i).equals("{")) {
+                                    cnt += 1;
+                                    i++;
+                                } else if (content.get(i).equals("}")) {
+                                    cnt -= 1;
+                                    i++;
+                                } else i++;
+                            }
+                        } else if ((content.get(i).equals("(") && !content.get(i - 1).equals(ObjectCurrentName.get(0)))||(content.get(i).equals("()") && !content.get(i - 1).equals(ObjectCurrentName.get(0)))) {
 
-                        handle_method(i);        //handle method
-                        if(obmethod.othr.equals("abstract")) {
-                            while(!content.get(i).equals(";")){
+                            handle_method(i);        //handle method
+                            if (obmethod.othr.equals("abstract")) {
+                                while (!content.get(i).equals(";")) {
+                                    i++;
+                                }
                                 i++;
                             }
-                            i++;
+                            System.out.println("ismethod");
+                        } else if (content.get(i).equals(";")) {
+                            handle_fields(i);         //handle fields
+                            System.out.println("isfield");
                         }
-                        System.out.println("ismethod");
-                    } else if(content.get(i).equals(";")) {
-                        handle_fields(i);         //handle fields
-                        System.out.println("isfield");
                     }
                 }
-            }
-            ob.SetStringForProperties();    //set List StringFields,method
+                ob.SetStringForProperties();    //set List StringFields,method
 
-            System.out.println(ob.parent);
-            listofObjectClasses.add(ob);
-            renew();
+                System.out.println(ob.parent);
+                listofObjectClasses.add(ob);
+                renew();
             }
-        System.out.println(Arrays.deepToString(listOfFiles));
+//            for(ObjectClasses pa:listofObjectClasses){
+//                for(ObjectClasses chi:listofObjectClasses){
+//                    for(String namepa:chi.parent){
+//                        if(namepa.equals(pa.name)){
+//                            pa.children.add(chi);
+//                            listofObjectClasses.remove(chi);
+//                        }
+//                    }
+//                }
+//            }
+            System.out.println(Arrays.deepToString(listOfFiles));
+
 
     }
     public void renew(){
@@ -113,6 +127,7 @@ public class Parser extends getClassContent {
         //create a new Objectclasses
         ob=new ObjectClasses(ObjectCurrentName.peek(),AccessModCurrent.peek(),othersCurrent.peek());
         //check has Parents
+        boolean isimplements=false;
         while(!content.get(i).equals("{")){
             if(content.get(i).equals("implements")||content.get(i).equals("extends")){
                 ob.hasParents=true;
@@ -120,7 +135,15 @@ public class Parser extends getClassContent {
                 //break;
             }
            if(content.get(i).equals("extends")) ob.parent.add(content.get(i+1));
+           if(content.get(i).equals("implements")) {
+               isimplements = true;
+           }
+           if(isimplements==true) {
+               if (content.get(i).equals(",")) ob.parent.add(content.get(i - 1));
+           }
+
             i++;
+           if(content.get(i).equals("{")&&isimplements) ob.parent.add(content.get(i-1));
         }
     }
     public void handle_constructor(int i){
@@ -179,6 +202,7 @@ public class Parser extends getClassContent {
             obfield= new ObjectFields(ObjectCurrentName.pop(),typeCurrent.pop(),AccessModCurrent.pop());
         }
         ob.ListFields.add(obfield);
+
         System.out.println(obfield.to_String());
    }
    public void handle_method(int i) {
